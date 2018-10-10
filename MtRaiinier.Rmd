@@ -182,30 +182,30 @@ df_sites <- rbind(df_AE10,df_AG05,df_AM16,df_AV06,df_TO04)
 sites_spatial <- read_csv("./data/sites")
 df_sites$long <- 0
 df_sites$lat <- 0
-df_sites[df_sites$site=="AV06",]$long<- sites_spatial %>% 
-    filter(site %in% c("AV06")) %>% select("long") %>%as.numeric()
-df_sites[df_sites$site=="AV06",]$lat<- sites_spatial %>% 
-    filter(site %in% c("AV06")) %>% select("lat")
-
-df_sites[df_sites$site=="AE10",]$long<- sites_spatial %>% 
-    filter(site %in% c("AE10")) %>% select("long")
-df_sites[df_sites$site=="AE10",]$lat<- sites_spatial %>% 
-    filter(site %in% c("AE10")) %>% select("lat")
-
-df_sites[df_sites$site=="AG05",]$long<- sites_spatial %>% 
-    filter(site %in% c("AG05")) %>% select("long")
-df_sites[df_sites$site=="AG05",]$lat<- sites_spatial %>% 
-    filter(site %in% c("AG05")) %>% select("lat")
-
-df_sites[df_sites$site=="AM16",]$long<- sites_spatial %>% 
-    filter(site %in% c("AM16")) %>% select("long")
-df_sites[df_sites$site=="AM16",]$lat<- sites_spatial %>% 
-    filter(site %in% c("AM16")) %>% select("lat")
-
-df_sites[df_sites$site=="TO04",]$long<- sites_spatial %>% 
-    filter(site %in% c("TO04")) %>% select("long")
-df_sites[df_sites$site=="TO04",]$lat<- sites_spatial %>% 
-    filter(site %in% c("TO04")) %>% select("lat")
+# df_sites[df_sites$site=="AV06",]$long<- sites_spatial %>% 
+#     filter(site %in% c("AV06")) %>% select("long") %>%as.numeric()
+# df_sites[df_sites$site=="AV06",]$lat<- sites_spatial %>% 
+#     filter(site %in% c("AV06")) %>% select("lat")
+# 
+# df_sites[df_sites$site=="AE10",]$long<- sites_spatial %>% 
+#     filter(site %in% c("AE10")) %>% select("long")
+# df_sites[df_sites$site=="AE10",]$lat<- sites_spatial %>% 
+#     filter(site %in% c("AE10")) %>% select("lat")
+# 
+# df_sites[df_sites$site=="AG05",]$long<- sites_spatial %>% 
+#     filter(site %in% c("AG05")) %>% select("long")
+# df_sites[df_sites$site=="AG05",]$lat<- sites_spatial %>% 
+#     filter(site %in% c("AG05")) %>% select("lat")
+# 
+# df_sites[df_sites$site=="AM16",]$long<- sites_spatial %>% 
+#     filter(site %in% c("AM16")) %>% select("long")
+# df_sites[df_sites$site=="AM16",]$lat<- sites_spatial %>% 
+#     filter(site %in% c("AM16")) %>% select("lat")
+# 
+# df_sites[df_sites$site=="TO04",]$long<- sites_spatial %>% 
+#     filter(site %in% c("TO04")) %>% select("long")
+# df_sites[df_sites$site=="TO04",]$lat<- sites_spatial %>% 
+#     filter(site %in% c("TO04")) %>% select("lat")
 ```
 
 #Save the files
