@@ -1,0 +1,224 @@
+---
+title: "Multivariate-Analysis-Sites"
+author: "Aji John"
+date: "10/10/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+```
+## Objective
+
+Goal is to test microclimatic variation hypthesis in long-term forests. i.e. There is a significant microclimatic variations that can be found under forest canopies. 
+
+## Study system
+
+Mt Rainier is known to house vary distinctive microclimates, for our study we chose 5 sites along an elvational gradient on the southside of Mt Rainier.
+
+# Data Preparation
+
+Find monthly minimum temperatures for all the 5 sites
+
+```{r }
+#Site TO04
+
+TO04 <- read_csv("./data/TO04-S1.csv",skip = 1)
+#rename columns
+col_names <- c("index","Date_Time", "Temp", "Intensity", "Coupler" , "HostConnected","Stopped",  "EndOfFile") 
+colnames(TO04) <- col_names
+# fix the date
+TO04$datetime <- as_datetime(TO04$Date_Time,format='%m/%d/%y %r',tz="America/Los_Angeles")
+#convery date from Posixlt to Posixct - Dplyr requirement
+TO04$datetime <- as.POSIXct(TO04$datetime)
+#create summary metrics by month
+TO04$hr <-strftime(TO04$datetime,'%H')
+TO04$min <-strftime(TO04$datetime,'%M')
+TO04$month <- strftime(TO04$datetime,'%m')
+TO04$day <- strftime(TO04$datetime,'%d')
+
+df_TO04 <- TO04 %>% group_by(month,day) %>%
+  mutate(min_daily= min(Temp),max_daily= max(Temp)) %>% 
+  group_by(month) %>% 
+  mutate(min_jja = mean(min_daily,na.rm = T),max_jja = max(max_daily,na.rm = T)) %>%
+  filter(month %in% c("06","07","08")) %>%
+  summarise(min_jja = mean(min_daily,na.rm = T),max_jja = max(max_daily,na.rm = T)) %>%
+  select(c("month","min_jja")) %>% 
+  spread(key = "month",value = "min_jja") %>%  mutate(site="TO04") %>% 
+  as.data.frame()
+
+#Site AE10
+
+AE10 <- read_csv("./data/AE10-S1.csv",skip = 1)
+#rename columns
+col_names <- c("index","Date_Time", "Temp", "Intensity", "Coupler" , "HostConnected","Stopped",  "EndOfFile") 
+colnames(AE10) <- col_names
+AE10 <- AE10[,col_names]
+# fix the date
+AE10$datetime <- as_datetime(AE10$Date_Time,format='%m/%d/%y %r',tz="America/Los_Angeles")
+#convery date from Posixlt to Posixct - Dplyr requirement
+AE10$datetime <- as.POSIXct(AE10$datetime)
+#create summary metrics by month
+AE10$hr <-strftime(AE10$datetime,'%H')
+AE10$min <-strftime(AE10$datetime,'%M')
+AE10$month <- strftime(AE10$datetime,'%m')
+AE10$day <- strftime(AE10$datetime,'%d')
+
+#missing june
+df_AE10 <- AE10 %>% 
+  group_by(month,day) %>%
+  mutate(min_daily= min(Temp),max_daily= max(Temp)) %>% 
+  group_by(month) %>% 
+  mutate(min_jja = mean(min_daily,na.rm = T),max_jja = max(max_daily,na.rm = T)) %>%
+  filter(month %in% c("06","07","08")) %>%
+  summarise(min_jja = mean(min_daily,na.rm = T),max_jja = max(max_daily,na.rm = T)) %>%
+  select(c("month","min_jja")) %>% 
+  spread(key = "month",value = "min_jja") %>%  mutate(site="AE10") %>% 
+  as.data.frame()
+
+# add "NA" for june
+df_AE10$"06" <- NA
+#Site AG05
+
+AG05 <- read_csv("./data/AG05-S1.csv",skip = 1)
+#rename columns
+col_names <- c("index","Date_Time", "Temp", "Intensity", "Coupler" , "HostConnected","Stopped",  "EndOfFile") 
+colnames(AG05) <- col_names
+AG05 <- AG05[,col_names]
+# fix the date
+AG05$datetime <- as_datetime(AG05$Date_Time,format='%m/%d/%y %r',tz="America/Los_Angeles")
+#convery date from Posixlt to Posixct - Dplyr requirement
+AG05$datetime <- as.POSIXct(AG05$datetime)
+#create summary metrics by month
+AG05$hr <-strftime(AG05$datetime,'%H')
+AG05$min <-strftime(AG05$datetime,'%M')
+AG05$month <- strftime(AG05$datetime,'%m')
+AG05$day <- strftime(AG05$datetime,'%d')
+
+#
+df_AG05 <- AG05 %>% 
+  group_by(month,day) %>%
+  mutate(min_daily= min(Temp),max_daily= max(Temp)) %>% 
+  group_by(month) %>% 
+  mutate(min_jja = mean(min_daily,na.rm = T),max_jja = max(max_daily,na.rm = T)) %>%
+  filter(month %in% c("06","07","08")) %>%
+  summarise(min_jja = mean(min_daily,na.rm = T),max_jja = max(max_daily,na.rm = T)) %>%
+  select(c("month","min_jja")) %>% 
+  spread(key = "month",value = "min_jja") %>%  mutate(site="AG05") %>% 
+  as.data.frame()
+
+#Site AM16
+
+AM16 <- read_csv("./data/AM16-S1.csv",skip = 1)
+#rename columns
+col_names <- c("index","Date_Time", "Temp", "Intensity", "Coupler" , "HostConnected","Stopped",  "EndOfFile") 
+colnames(AM16) <- col_names
+AM16 <- AM16[,col_names]
+# fix the date
+AM16$datetime <- as_datetime(AM16$Date_Time,format='%m/%d/%y %r',tz="America/Los_Angeles")
+#convery date from Posixlt to Posixct - Dplyr requirement
+AM16$datetime <- as.POSIXct(AM16$datetime)
+#create summary metrics by month
+AM16$hr <-strftime(AM16$datetime,'%H')
+AM16$min <-strftime(AM16$datetime,'%M')
+AM16$month <- strftime(AM16$datetime,'%m')
+AM16$day <- strftime(AM16$datetime,'%d')
+
+#
+df_AM16 <- AM16 %>% 
+  group_by(month,day) %>%
+  mutate(min_daily= min(Temp),max_daily= max(Temp)) %>% 
+  group_by(month) %>% 
+  mutate(min_jja = mean(min_daily,na.rm = T),max_jja = max(max_daily,na.rm = T)) %>%
+  filter(month %in% c("06","07","08")) %>%
+  summarise(min_jja = mean(min_daily,na.rm = T),max_jja = max(max_daily,na.rm = T)) %>%
+  select(c("month","min_jja")) %>% 
+  spread(key = "month",value = "min_jja") %>%  mutate(site="AM16") %>% 
+  as.data.frame()
+
+#Site AV06
+
+AV06 <- read_csv("./data/AV06-S1.csv",skip = 1)
+#rename columns
+col_names <- c("index","Date_Time", "Temp", "Intensity", "Coupler" , "HostConnected","Stopped",  "EndOfFile") 
+colnames(AV06) <- col_names
+AV06 <- AV06[,col_names]
+# fix the date
+AV06$datetime <- as_datetime(AV06$Date_Time,format='%m/%d/%y %r',tz="America/Los_Angeles")
+#convery date from Posixlt to Posixct - Dplyr requirement
+AV06$datetime <- as.POSIXct(AV06$datetime)
+#create summary metrics by month
+AV06$hr <-strftime(AV06$datetime,'%H')
+AV06$min <-strftime(AV06$datetime,'%M')
+AV06$month <- strftime(AV06$datetime,'%m')
+AV06$day <- strftime(AV06$datetime,'%d')
+
+#
+df_AV06 <- AV06 %>% 
+  group_by(month,day) %>%
+  mutate(min_daily= min(Temp),max_daily= max(Temp)) %>% 
+  group_by(month) %>% 
+  mutate(min_jja = mean(min_daily,na.rm = T),max_jja = max(max_daily,na.rm = T)) %>%
+  filter(month %in% c("06","07","08")) %>%
+  summarise(min_jja = mean(min_daily,na.rm = T),max_jja = max(max_daily,na.rm = T)) %>%
+  select(c("month","min_jja")) %>% 
+  spread(key = "month",value = "min_jja") %>%  mutate(site="AV06") %>% 
+  as.data.frame()
+
+#site characteristics
+```
+#Combine into 1 dataframe
+
+```{r , echo=FALSE}
+df_sites <- rbind(df_AE10,df_AG05,df_AM16,df_AV06,df_TO04)
+```
+
+
+
+#Add additional site characteristics
+```{r , echo=FALSE}
+sites_spatial <- read_csv("./data/sites")
+df_sites$long <- 0
+df_sites$lat <- 0
+df_sites[df_sites$site=="AV06",]$long<- sites_spatial %>% 
+    filter(site %in% c("AV06")) %>% select("long") %>%as.numeric()
+df_sites[df_sites$site=="AV06",]$lat<- sites_spatial %>% 
+    filter(site %in% c("AV06")) %>% select("lat")
+
+df_sites[df_sites$site=="AE10",]$long<- sites_spatial %>% 
+    filter(site %in% c("AE10")) %>% select("long")
+df_sites[df_sites$site=="AE10",]$lat<- sites_spatial %>% 
+    filter(site %in% c("AE10")) %>% select("lat")
+
+df_sites[df_sites$site=="AG05",]$long<- sites_spatial %>% 
+    filter(site %in% c("AG05")) %>% select("long")
+df_sites[df_sites$site=="AG05",]$lat<- sites_spatial %>% 
+    filter(site %in% c("AG05")) %>% select("lat")
+
+df_sites[df_sites$site=="AM16",]$long<- sites_spatial %>% 
+    filter(site %in% c("AM16")) %>% select("long")
+df_sites[df_sites$site=="AM16",]$lat<- sites_spatial %>% 
+    filter(site %in% c("AM16")) %>% select("lat")
+
+df_sites[df_sites$site=="TO04",]$long<- sites_spatial %>% 
+    filter(site %in% c("TO04")) %>% select("long")
+df_sites[df_sites$site=="TO04",]$lat<- sites_spatial %>% 
+    filter(site %in% c("TO04")) %>% select("lat")
+```
+
+#Save the files
+```{r , echo=FALSE}
+df_sites %>% write_csv("./data/sites_explained.csv")
+```
+
+
+## Exploratory Plots
+
+You can also embed plots, for example:
+
+```{r , echo=FALSE}
+
+```
+
