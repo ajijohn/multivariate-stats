@@ -112,4 +112,38 @@ fviz_contrib(env2.pca, choice = "var", axes = 1, top = 10)
 
 #Finally, let’s now interpret the ordination plot by symbolizing each site (point) according to their level of human disturbance contained in the sitegroup dataset. We will also draw concentration ellispes. Try typing:
     fviz_pca(env2.pca,label = "var", habillage = sitegroup$DISTURB,palette = c("orange", "green", "yellow","red"), addEllipses = TRUE)
-    
+
+    #If you want, you can try typing:
+ordiplot(env.pca, choices = c(1, 2), type="text", display="sites", xlab="PC 1 (27%)", ylab="PC 2 (18%)")    
+arrows(0,0,env.pca$rotation[,1]*5,env.pca$rotation[,2]*5,col='purple')
+text(env.pca$rotation[,1]*5.2,env.pca$rotation[,2]*5.2,row.names(env.pca$rotation))    
+
+# looking at species abudance of one species with PC1
+plot(speabu[,c(1)] , env.scores[,'PC1'])
+abline(1,1)
+summary(lm(speabu[,c(1)] ~ env.scores[,'PC1'] ))
+
+Species<- colnames(speabu)
+
+#default multipanel plot
+# 3 rows and 4 columns - mf - multipanel plot
+par(mfcol=c(3,4),  oma=c(5,3,1,1),mar=c(1,3,0,0))
+for (i in 1:36) {
+  plot(x=env.scores[,'PC1'], y=speabu[,c(i)], type="p",  
+       xaxs="i",yaxs="i")        #remove the first two columns which contain data
+  abline(1,1)
+  box(col="gray80") 
+  
+
+  
+  #side -3  top, line = -1
+  mtext(side=3,line=-1,text=Species[i],cex=0.5) #add area label
+  
+}
+
+#Add outer
+
+mtext(side=1,outer=T,line=3,"Scores")                 #label on the outside of all plots
+mtext(side=2,outer=T,line=1,"Abundance")   #label on the outside of all plots
+
+
