@@ -49,6 +49,15 @@ vec.sp<-envfit(spe.nmds$points, speabu.log, perm=1000)
 
 vec.sp
 
+#
+#plot these loadings on the ordination plot.
+par()
+ordiplot(spe.nmds, choices = c(1, 2), type="text", display="sites", xlab="Axis 1", ylab="Axis 2")
+plot(vec.sp, p.max=.01, col="blue")
+
+#plotting , by product
+
+
 Env_variables<- colnames(envdata)
 
 #default multipanel plot
