@@ -84,23 +84,24 @@ pca.structure(env.pca,envdata,dim=5,cutoff=.4)
 #   Each sample has a score or location on each principal component axis. 
 # To see these sample scores, which are stored in the component named ‘x’ in the list object
 # output from the prcomp() function, simply type:
-  env.scores<-env.pca$x 
-  env.scores
+env.scores<-env.pca$x 
+env.scores
   
-  #visualize the plot
+#visualize the plot
   
-  biplot(env.pca)
+biplot(env.pca)
 
   
   #redo the visualization
   
 #First type the following to conduct the PCA:
-    env2.pca<-PCA(envdata,graph=F)
+env2.pca<-PCA(envdata,graph=F)
 #Type the following to produce the scree-plot of eigenvalues:
-    fviz_screeplot(env2.pca, addlabels = TRUE, ylim = c(0, 30))  
+fviz_screeplot(env2.pca, addlabels = TRUE, ylim = c(0, 30))  
     
 #Now, let’s look at the variable loadings (i.e., eigenvectors) by typing:
-      fviz_pca_var(env2.pca, col.var = "black")
+fviz_pca_var(env2.pca, col.var = "black")
+
 #and a fancy looking one where total contributions of the variables are color coded:
 fviz_pca_var(env2.pca, col.var="contrib",gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), repel = TRUE)
 
@@ -108,12 +109,12 @@ fviz_pca_var(env2.pca, col.var="contrib",gradient.cols = c("#00AFBB", "#E7B800",
 fviz_contrib(env2.pca, choice = "var", axes = 1, top = 10)
 
 #Producethe PCA biplot by typing:
-  fviz_pca_biplot(env2.pca, repel = TRUE)
+fviz_pca_biplot(env2.pca, repel = TRUE)
 
 #Finally, let’s now interpret the ordination plot by symbolizing each site (point) according to their level of human disturbance contained in the sitegroup dataset. We will also draw concentration ellispes. Try typing:
-    fviz_pca(env2.pca,label = "var", habillage = sitegroup$DISTURB,palette = c("orange", "green", "yellow","red"), addEllipses = TRUE)
+fviz_pca(env2.pca,label = "var", habillage = sitegroup$DISTURB,palette = c("orange", "green", "yellow","red"), addEllipses = TRUE)
 
-    #If you want, you can try typing:
+#If you want, you can try typing:
 ordiplot(env.pca, choices = c(1, 2), type="text", display="sites", xlab="PC 1 (27%)", ylab="PC 2 (18%)")    
 arrows(0,0,env.pca$rotation[,1]*5,env.pca$rotation[,2]*5,col='purple')
 text(env.pca$rotation[,1]*5.2,env.pca$rotation[,2]*5.2,row.names(env.pca$rotation))    
