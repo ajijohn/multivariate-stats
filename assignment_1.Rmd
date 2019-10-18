@@ -1,0 +1,54 @@
+---
+title: "Assignment-1"
+author: "Aji John"
+date: "10/16/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+source('biostats.R')
+library(gclus)
+source('./coldiss.R')
+#load multiple pkgs vegan, simba, cluster, ecodist, gclus
+lapply(c("vegan", "cluster", "pvclust"), require, character.only = TRUE)
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+scotch <- read_csv('./data/Scotch_data_csv.csv')
+row.names(scotch) <- scotch$Distillery
+scotch_filtered <- scotch %>% select(c(-'Distillery',-'Region',-'District')) %>% as.data.frame()
+scotch.euc <-vegdist(scotch_filtered, method="euclidean")
+coldiss(scotch.euc,nc=4,byrank=FALSE,diag=TRUE)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+#compute 2. Compute hierarchical clustering
+
+sitecl.ave<-hclust(scotch.euc,method='average') 
+
+#examining clustering results
+hclus.table(sitecl.ave)
+
+#plot the dendrogrsam
+
+plot(sitecl.ave)
+#fancy version
+plot(sitecl.ave,main='Average-linkage Dendrogram',xlab='Sites',ylab='Euclidean distance',hang=-1)
+
+hclus.scree(sitecl.ave)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

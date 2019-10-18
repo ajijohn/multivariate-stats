@@ -213,12 +213,58 @@ df_sites$lat <- 0
 df_sites %>% write_csv("./data/sites_explained.csv")
 ```
 
+## Combine all the raw files into one
+```{r , echo=FALSE}
+
+raw_AE10 <- AE10
+raw_AE10$Site <- 'AE10' 
+raw_AG05 <- AG05
+raw_AG05$Site <- 'AG05' 
+raw_AM16 <- AM16
+raw_AM16$Site <- 'AM16' 
+raw_AV06 <- AV06
+raw_AV06$Site <- 'AV06' 
+raw_TO04 <- TO04
+raw_TO04$Site <- 'TO04' 
+df_raw_sites <- rbind(raw_AE10,raw_AG05,raw_AM16,raw_AV06,raw_TO04)
+
+```
+
+
 
 ## Exploratory Plots
 
 You can also embed plots, for example:
 
+One site
 ```{r , echo=FALSE}
-
+AV06  %>% filter(day %in% c('21') & month %in% c('07') )  %>%
+   group_by(month,day,hr)  %>%
+  ggplot() +
+  geom_line(aes(hr,Temp,group=day,color='AV06'),se=T) +
+  theme_minimal() + ggtitle("Variation in temperature at different sites")  + xlab("Hour") +
+  ylab("Temperature (°C)") + labs(colour = "Site",
+                                subtitle="7/21/2018",caption="Data Source : JHRL Lab") 
 ```
 
+Multiple sites on a July day
+```{r , echo=FALSE}
+df_raw_sites  %>% filter(day %in% c('21') & month %in% c('07') )  %>%
+   group_by(month,day,hr)  %>%
+  ggplot() +
+  geom_line(aes(hr,Temp,group=Site,color=Site),se=T) +
+  theme_minimal() + ggtitle("Variation in temperature at different sites")  + xlab("Hour") +
+  ylab("Temperature (°C)") + labs(colour = "Site",
+                                subtitle="7/21/2018",caption="Data Source : JHRL Lab") 
+```
+
+Multiple sites on a August day
+```{r , echo=FALSE}
+df_raw_sites  %>% filter(day %in% c('21') & month %in% c('08') )  %>%
+   group_by(month,day,hr)  %>%
+  ggplot() +
+  geom_line(aes(hr,Temp,group=Site,color=Site),se=T) +
+  theme_minimal() + ggtitle("Variation in temperature at different sites")  + xlab("Hour") +
+  ylab("Temperature (°C)") + labs(colour = "Site",
+                                subtitle="8/21/2018",caption="Data Source : JHRL Lab") 
+```
